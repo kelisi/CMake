@@ -4,13 +4,26 @@ project(learn_cmake)
 
 
 ################################
-# create opus library
+# create static opus library
 ################################
 add_library(opus STATIC third/opus/src/Opus.cpp)
 
+# PUBLIC: used for this library && target who links this lib
+# PRIVATE: used for this library
+# INTERFACE: used for target who links this lib
 target_include_directories(opus 
                         PUBLIC 
                             ${PROJECT_SOURCE_DIR}/third/opus/include)
+
+################################
+# create shared amr library
+################################
+add_library(amr SHARED third/amr/src/Amr.cpp)
+add_library(codec::amr ALIAS amr)
+
+target_include_directories(amr
+                        PUBLIC
+                            ${PROJECT_SOURCE_DIR}/third/amr/include)
 
 ################################
 # create executable
@@ -35,4 +48,6 @@ target_include_directories(target_main
 
 target_link_libraries(target_main 
                     PRIVATE
-                        opus)
+                        opus
+                    PRIVATE
+                        codec::amr)
