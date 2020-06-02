@@ -16,7 +16,7 @@ target_include_directories(opus
                             ${PROJECT_SOURCE_DIR}/third/opus/include)
 
 ################################
-# create shared amr library
+# create shared amr library （Alias Name）
 ################################
 add_library(amr SHARED third/amr/src/Amr.cpp)
 add_library(codec::amr ALIAS amr)
@@ -30,7 +30,18 @@ target_include_directories(amr
 ################################
 
 # RelWithDebInfo(code optimize) or DEBUG
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
+# set(CMAKE_BUILD_TYPE RelWithDebInfo)
+
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message("Setting build type to 'RelWithDebInfo' as none was specified.")
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
+endif()
+
+# set global compile flag
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCODEC_OPUS -DCODEC_AMR" CACHE STRING "Set C++ Compiler Flags" FORCE)
 
 set(SOURCES 
         src/HelloCmake.cpp
@@ -44,6 +55,11 @@ add_executable(target_main ${SOURCES})
 target_include_directories(target_main 
                         PRIVATE 
                             ${PROJECT_SOURCE_DIR}/include
+)
+
+# target compile flags
+target_compile_definitions(target_main
+    PRIVATE CODEC_OPUS
 )
 
 target_link_libraries(target_main 

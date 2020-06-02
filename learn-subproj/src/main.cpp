@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include "HelloCmake.h"
 #include "Opus.h"
 #include "Amr.h"
 
+#include "tool.h"
+
 int main()
 {
-    HelloCmake hc;
-    hc.Hello();
 #ifdef CODEC_OPUS
     Opus opus;
     opus.init();
@@ -16,6 +15,9 @@ int main()
     Amr amr;
     amr.init();
 #endif
+
+    //call c function
+    calledByCpp();
 
     return 0;
 }
